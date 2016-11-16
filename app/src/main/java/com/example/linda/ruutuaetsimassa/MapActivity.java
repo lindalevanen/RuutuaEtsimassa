@@ -1,6 +1,8 @@
 package com.example.linda.ruutuaetsimassa;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -20,12 +22,16 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.HashMap;
+
+import static android.R.attr.width;
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.fromResource;
 
 public class MapActivity extends FragmentActivity
         implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, InfoFragment.onInfoItemPressed,
@@ -39,6 +45,9 @@ public class MapActivity extends FragmentActivity
     public DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ArrayAdapter<String> mAdapter;
+
+    private int height = 100;
+    private double width = height * 0.6172;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,8 +161,11 @@ public class MapActivity extends FragmentActivity
     }
 
     public void setNewCharger(Charger charger) {
+        Bitmap markerBtmp = BitmapFactory.decodeResource(getResources(), R.drawable.blue_map_marker);
+        Bitmap resized = Bitmap.createScaledBitmap(markerBtmp, (int) width, height, true);
         Marker newMarker = mMap.addMarker(new MarkerOptions()
-                .position(charger.getCoords()));
+                .position(charger.getCoords())
+                .icon(BitmapDescriptorFactory.fromBitmap(resized)));
         markerChargerMap.put(newMarker, charger);
     }
 
@@ -164,7 +176,7 @@ public class MapActivity extends FragmentActivity
         slideLO.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
 
         InfoFragment infoFrag =
-                InfoFragment.newInstance(markerChargerMap.get(marker));
+                InfoFragment.newInstance(markerChargerMap.get(marker), marker);
         trans.add(R.id.info_frag, infoFrag, "chargerInfo");
         trans.addToBackStack(null);
         trans.commit();
@@ -177,6 +189,16 @@ public class MapActivity extends FragmentActivity
             case "filterFragment":
         }*/
         manager.popBackStack();
+    }
+
+    public void onBookPressed(Marker marker) {
+        Bitmap newIcon = BitmapFactory.decodeResource(getResources(), R.drawable.red_map_marker);
+        Bitmap resizedIcon = Bitmap.createScaledBitmap(newIcon, (int) width, height, true);
+        marker.setIcon(BitmapDescriptorFactory.fromBitmap(resizedIcon));
+        //TODO: muuta chargerin tilaa
+        markerChargerMap.get(marker).setAsFree(false);
+        Toast.makeText(this, "Varaus onnistui!", Toast.LENGTH_SHORT).show();
+        slideLO.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
     }
 
     @Override

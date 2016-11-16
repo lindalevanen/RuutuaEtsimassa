@@ -53,4 +53,7 @@ public class Charger {
     public boolean isFree() {
         return isFree;
     }
+
+    public void setAsFree(boolean free) { this.isFree = free; }
+
 }

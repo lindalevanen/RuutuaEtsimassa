@@ -7,9 +7,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.linda.ruutuaetsimassa.Entities.Charger;
+import com.google.android.gms.maps.model.Marker;
 
 public class InfoFragment extends Fragment {
 
@@ -22,8 +25,10 @@ public class InfoFragment extends Fragment {
     private static final String ARGUMENT_PLUGTYPE = "plugType";
     private static final String ARGUMENT_POWER = "power";
 
+    private static Marker marker;
+
     public interface onInfoItemPressed {
-        //void onFragmentInteraction(Uri uri);
+        void onBookPressed(Marker marker);
     }
 
     @Override
@@ -42,9 +47,11 @@ public class InfoFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static InfoFragment newInstance(Charger charger) {
+    public static InfoFragment newInstance(Charger charger, Marker mark) {
         InfoFragment fragment = new InfoFragment();
         Bundle args = new Bundle();
+
+        marker = mark;
 
         args.putString(ARGUMENT_NAME, charger.getName());
         args.putString(ARGUMENT_ADDRESS, charger.getAddress());
@@ -73,20 +80,33 @@ public class InfoFragment extends Fragment {
         TextView nameView = (TextView) view.findViewById(R.id.name);
         TextView addressView = (TextView) view.findViewById(R.id.address);
         TextView descriptionView = (TextView) view.findViewById(R.id.description);
+        Button bookButton = (Button) view.findViewById(R.id.bookButton);
 
         nameView.setText(args.getString(ARGUMENT_NAME));
         addressView.setText(args.getString(ARGUMENT_ADDRESS));
         descriptionView.setText(args.getString(ARGUMENT_DESCRIPTION));
 
+        bookButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(args.getBoolean(ARGUMENT_STATE)) {
+                    onBookPressed(marker);
+                    args.putBoolean(ARGUMENT_STATE, false);
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "Varattu juuri nyt!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         return view;
     }
 
-    /*
-    public void onButtonPressed(Uri uri) {
+
+    public void onBookPressed(Marker marker) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onBookPressed(marker);
         }
-    }*/
+    }
 
     @Override
     public void onDetach() {
