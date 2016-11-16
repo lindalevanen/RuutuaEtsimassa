@@ -4,6 +4,11 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.linda.ruutuaetsimassa.Entities.Charger;
@@ -25,6 +30,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     SlidingUpPanelLayout slideLO;
     private HashMap<Marker, Charger> markerChargerMap;
 
+    //Navigation drawer variables
+    public DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private ArrayAdapter<String> mAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,11 +47,36 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         markerChargerMap = new HashMap<Marker, Charger>();
 
         sliderInit();
+        initDrawer();
+
     }
 
     public void sliderInit() {
         slideLO = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         slideLO.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+    }
+
+    /**
+     * Set up the navigation drawer
+     */
+
+    public void initDrawer() {
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_lo);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        this.addDrawerItems();
+
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //selectItem(position);
+            }
+        });
+    }
+
+    private void addDrawerItems() {
+        String[] items = getResources().getStringArray(R.array.drawer_items);
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
+        mDrawerList.setAdapter(mAdapter);
     }
 
     /**
@@ -57,17 +92,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        // This all we should be later able to do in the user setting a new marker
         LatLng otaniemi = new LatLng(60.184310, 24.829612);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(otaniemi, 13));
 
-        Marker ota = mMap.addMarker(new MarkerOptions()
-                .position(otaniemi));
         Charger otaCharger = new Charger("Otaniemi charger",
                 "A charger in the middle of Otaniemi, free to use. It's located by Otaniemi mall " +
                         "behind Apteekki.", "Otaniementie 18",
                 true, 18.0, PoleType.TESLA, otaniemi);
 
-        markerChargerMap.put(ota, otaCharger);
+        setNewCharger(otaCharger);
 
         // Zoom in, animating the camera.
         mMap.animateCamera(CameraUpdateFactory.zoomIn());
@@ -81,6 +115,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     public boolean onMarkerClick(final Marker marker) {
         showMarkerInfo(marker);
         return false;
+    }
+
+    public void setNewCharger(Charger charger) {
+        Marker newMarker = mMap.addMarker(new MarkerOptions()
+                .position(charger.getCoords()));
+        markerChargerMap.put(newMarker, charger);
     }
 
     public void showMarkerInfo(Marker marker) {

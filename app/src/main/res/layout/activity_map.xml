@@ -1,10 +1,11 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sothree="http://schemas.android.com/tools"
+    android:id="@+id/drawer_lo"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:sothree="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
-    <!-- TODO: miksei panelheight muutu??!??!!?-->
+    <!-- Main content -->
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
         xmlns:sothree="http://schemas.android.com/apk/res-auto"
         android:id="@+id/sliding_layout"
@@ -13,12 +14,10 @@
         android:gravity="bottom"
         sothree:umanoPanelHeight="105dp"
         sothree:umanoShadowHeight="4dp">
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center">
-
             <!-- The map view -->
             <fragment xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
@@ -28,9 +27,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 tools:context="com.example.linda.ruutuaetsimassa.MapActivity" />
-
         </RelativeLayout>
-
         <!-- The marker info panel view -->
         <FrameLayout android:id="@+id/info_frag"
             android:layout_width="match_parent"
@@ -38,10 +35,18 @@
             android:layout_weight="0.5"
             android:gravity="center|top"
             android:background="#ffffff" />
-
-
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
+    <!-- Drawer -->
+    <ListView android:id="@+id/left_drawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
+        android:divider="@color/colorAccent"
+        android:dividerHeight="1px"
+        android:background="#ffffff"/>
 
 
-</RelativeLayout>
+
+</android.support.v4.widget.DrawerLayout>
