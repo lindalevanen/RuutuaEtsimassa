@@ -2,7 +2,7 @@
 <resources>
     <string-array name="drawer_items">
         <item>Suodatin</item>
-        <item>Asetuket</item>
+        <item>Asetukset</item>
         <item>Lisää oma tolppa</item>
         <item>Kirjaudu ulos</item>
     </string-array>
