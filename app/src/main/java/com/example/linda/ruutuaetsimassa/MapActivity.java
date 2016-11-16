@@ -1,9 +1,11 @@
 package com.example.linda.ruutuaetsimassa;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.linda.ruutuaetsimassa.Entities.Charger;
 import com.example.linda.ruutuaetsimassa.Entities.PoleType;
+import com.google.android.gms.drive.query.Filter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -24,7 +27,9 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.HashMap;
 
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, InfoFragment.onInfoItemPressed{
+public class MapActivity extends FragmentActivity
+        implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, InfoFragment.onInfoItemPressed,
+        FilterFragment.OnFilterActionListener {
 
     private GoogleMap mMap;
     SlidingUpPanelLayout slideLO;
@@ -68,9 +73,38 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //selectItem(position);
+                selectItem(position);
             }
         });
+    }
+
+    /**
+     * Determine what happens when the items in the navi drawer are pressed.
+     * @param position the position of the item in the list
+     */
+
+    public void selectItem(int position) {
+        switch (position) {
+            case 0:     //Filtering
+                FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
+                FilterFragment filterFrag =
+                        FilterFragment.newInstance();
+                trans.add(R.id.filter_fragment, filterFrag, "filterFragment");
+                trans.addToBackStack(null);
+                trans.commit();
+
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                break;
+            case 1:     //Settings
+                Toast.makeText(this, "Settings not yet implemented!", Toast.LENGTH_SHORT).show();
+                break;
+            case 2:     //Own charger
+                Toast.makeText(this, "Adding own charger not yet implemented!", Toast.LENGTH_SHORT).show();
+                break;
+            case 3:     //Sign out
+                Toast.makeText(this, "Signing out not yet implemented!", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     private void addDrawerItems() {
@@ -131,9 +165,18 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
         InfoFragment infoFrag =
                 InfoFragment.newInstance(markerChargerMap.get(marker));
-        trans.add(R.id.info_frag, infoFrag, "landmarkInfo");
+        trans.add(R.id.info_frag, infoFrag, "chargerInfo");
         trans.addToBackStack(null);
         trans.commit();
+    }
+
+    public void onClosePressed(String fragment) {
+        FragmentManager manager = getSupportFragmentManager();
+        /* These is switch-case in case there are multiple frament that close differently
+        switch (fragment) {
+            case "filterFragment":
+        }*/
+        manager.popBackStack();
     }
 
     @Override

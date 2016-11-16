@@ -6,36 +6,50 @@
     android:layout_height="match_parent">
 
     <!-- Main content -->
-    <com.sothree.slidinguppanel.SlidingUpPanelLayout
-        xmlns:sothree="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/sliding_layout"
+    <FrameLayout android:id="@+id/main_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
-        sothree:umanoPanelHeight="105dp"
-        sothree:umanoShadowHeight="4dp">
-        <RelativeLayout
+        android:layout_height="match_parent">
+
+        <com.sothree.slidinguppanel.SlidingUpPanelLayout
+            xmlns:sothree="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/sliding_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center">
-            <!-- The map view -->
-            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/map"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:gravity="bottom"
+            sothree:umanoPanelHeight="105dp"
+            sothree:umanoShadowHeight="4dp">
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                tools:context="com.example.linda.ruutuaetsimassa.MapActivity" />
-        </RelativeLayout>
-        <!-- The marker info panel view -->
-        <FrameLayout android:id="@+id/info_frag"
+                android:gravity="center">
+                <!-- The map view -->
+                <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/map"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    tools:context="com.example.linda.ruutuaetsimassa.MapActivity" />
+
+            </RelativeLayout>
+            <!-- The marker info panel view -->
+            <FrameLayout android:id="@+id/info_frag"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:gravity="center|top"
+                android:background="#ffffff" />
+        </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+        <FrameLayout android:id="@+id/filter_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:gravity="center|top"
-            android:background="#ffffff" />
-    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+            android:layout_gravity="right|top">
+        </FrameLayout>
+
+    </FrameLayout>
+
 
     <!-- Drawer -->
     <ListView android:id="@+id/left_drawer"
