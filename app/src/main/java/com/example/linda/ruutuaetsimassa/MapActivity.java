@@ -40,8 +40,8 @@ import static android.R.attr.width;
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.fromResource;
 
 public class MapActivity extends FragmentActivity
-        implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, InfoFragment.onInfoItemPressed,
-        FilterFragment.OnFilterActionListener {
+        implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener,
+        InfoFragment.onInfoItemPressed, FilterFragment.OnFilterActionListener {
 
     private GoogleMap mMap;
     SlidingUpPanelLayout slideLO;
@@ -169,12 +169,18 @@ public class MapActivity extends FragmentActivity
         mMap.animateCamera(CameraUpdateFactory.zoomTo(13), 2000, null);
 
         mMap.setOnMarkerClickListener(this);
+        mMap.setOnMapClickListener(this);
     }
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
         showMarkerInfo(marker);
         return false;
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        hideMarkerInfo();
     }
 
     public void setNewCharger(Charger charger) {
@@ -212,6 +218,19 @@ public class MapActivity extends FragmentActivity
         trans.add(R.id.info_frag, infoFrag, "chargerInfo");
         trans.addToBackStack(null);
         trans.commit();
+    }
+
+    public void hideMarkerInfo() {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction trans = manager.beginTransaction();
+
+        Fragment possibleFrag = manager.findFragmentByTag("chargerInfo");
+        if(possibleFrag != null) {
+            trans.remove(possibleFrag);
+            manager.popBackStack();
+            slideLO.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+        }
+
     }
 
     public void onClosePressed(String fragment) {
