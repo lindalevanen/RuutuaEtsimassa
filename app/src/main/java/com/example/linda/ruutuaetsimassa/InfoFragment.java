@@ -13,6 +13,9 @@ import android.widget.Toast;
 
 import com.example.linda.ruutuaetsimassa.Entities.Charger;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.vision.text.Text;
+
+import static com.example.linda.ruutuaetsimassa.R.id.bookButton;
 
 public class InfoFragment extends Fragment {
 
@@ -24,11 +27,13 @@ public class InfoFragment extends Fragment {
     private static final String ARGUMENT_STATE = "state";
     private static final String ARGUMENT_PLUGTYPE = "plugType";
     private static final String ARGUMENT_POWER = "power";
+    private static final String ARGUMENT_OWNCHARGER = "ownCharger";
+    private static final String ARGUMENT_PRICE = "price";
 
     private static Marker marker;
 
     public interface onInfoItemPressed {
-        void onBookPressed(Marker marker);
+        void onBookPressed(Marker marker, boolean ownCharger);
     }
 
     @Override
@@ -47,7 +52,7 @@ public class InfoFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static InfoFragment newInstance(Charger charger, Marker mark) {
+    public static InfoFragment newInstance(Charger charger, Marker mark, boolean thisIsOwn) {
         InfoFragment fragment = new InfoFragment();
         Bundle args = new Bundle();
 
@@ -57,8 +62,11 @@ public class InfoFragment extends Fragment {
         args.putString(ARGUMENT_ADDRESS, charger.getAddress());
         args.putString(ARGUMENT_DESCRIPTION, charger.getDescription());
         args.putBoolean(ARGUMENT_STATE, charger.isFree());
-        args.putString(ARGUMENT_PLUGTYPE, charger.getName());
-        args.putString(ARGUMENT_POWER, charger.getName());
+        args.putString(ARGUMENT_PLUGTYPE, charger.getPoleType().getName());
+        args.putDouble(ARGUMENT_POWER, charger.getPower());
+        args.putDouble(ARGUMENT_PRICE, charger.getPricePerH());
+
+        args.putBoolean(ARGUMENT_OWNCHARGER, thisIsOwn);
 
         fragment.setArguments(args);
         return fragment;
@@ -80,31 +88,51 @@ public class InfoFragment extends Fragment {
         TextView nameView = (TextView) view.findViewById(R.id.name);
         TextView addressView = (TextView) view.findViewById(R.id.address);
         TextView descriptionView = (TextView) view.findViewById(R.id.description);
+        TextView priceView = (TextView) view.findViewById(R.id.price);
         Button bookButton = (Button) view.findViewById(R.id.bookButton);
+        TextView typeView = (TextView) view.findViewById(R.id.typeText);
+        TextView powerView = (TextView) view.findViewById(R.id.powerText);
 
         nameView.setText(args.getString(ARGUMENT_NAME));
         addressView.setText(args.getString(ARGUMENT_ADDRESS));
         descriptionView.setText(args.getString(ARGUMENT_DESCRIPTION));
+        priceView.setText(args.getDouble(ARGUMENT_PRICE) + "e/h");
+        typeView.setText("Tyyppi:\t\t"+args.getString(ARGUMENT_PLUGTYPE));
+        powerView.setText("Teho:\t\t\t"+args.getDouble(ARGUMENT_POWER)+" kW");
 
-        bookButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(args.getBoolean(ARGUMENT_STATE)) {
-                    onBookPressed(marker);
-                    args.putBoolean(ARGUMENT_STATE, false);
-                } else {
-                    Toast.makeText(getActivity().getApplicationContext(), "Varattu juuri nyt!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        initBookButton(bookButton);
 
         return view;
     }
 
+    public void initBookButton(Button bookB) {
 
-    public void onBookPressed(Marker marker) {
+        if(getArguments().getBoolean(ARGUMENT_OWNCHARGER)) {
+            bookB.setText("Lopeta lataus");
+        }
+
+        bookB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getArguments().getBoolean(ARGUMENT_OWNCHARGER)) {
+                    onBookPressed(marker, getArguments().getBoolean(ARGUMENT_OWNCHARGER));
+                } else {
+                    if(getArguments().getBoolean(ARGUMENT_STATE)) {
+                        onBookPressed(marker, getArguments().getBoolean(ARGUMENT_OWNCHARGER));
+                        getArguments().putBoolean(ARGUMENT_STATE, false);
+                    } else {
+                        Toast.makeText(getActivity().getApplicationContext(), "Varattu juuri nyt!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            }
+        });
+    }
+
+
+    public void onBookPressed(Marker marker, boolean ownCharger) {
         if (mListener != null) {
-            mListener.onBookPressed(marker);
+            mListener.onBookPressed(marker, ownCharger);
         }
     }
 

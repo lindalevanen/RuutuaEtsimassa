@@ -15,7 +15,7 @@ public enum PoleType {
     SAECOMBO("SAE Combo"),
     CHADEMO("CHAdeMO");
 
-    private final String name;
+    private String name;
 
     private PoleType(String name) {
         this.name = name;

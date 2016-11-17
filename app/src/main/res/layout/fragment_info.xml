@@ -4,68 +4,96 @@
     android:layout_height="match_parent"
     android:padding="15dp">
 
-    <TextView android:id="@+id/name"
+    <LinearLayout android:id="@+id/topSection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
-        android:textSize="25sp"
-        android:text="Name"/>
+        android:layout_marginBottom="10dp">
+
+        <TextView android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:textSize="25sp"
+            android:maxLines="1"
+            android:text="Name"/>
+
+        <TextView android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-4dp"
+            android:paddingLeft="10dp"
+            android:text="5.0e/h"/>
+
+    </LinearLayout>
     
     <TextView android:id="@+id/address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/name"
+        android:layout_below="@+id/topSection"
         android:paddingBottom="20dp"
         android:textSize="20sp"
         android:text="Address"/>
 
-    <LinearLayout android:id="@+id/descBox"
+    <TextView android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@id/address">
+        android:maxLines="5"
+        android:ellipsize="end"
+        android:layout_weight="1"
+        android:layout_below="@+id/address"
+        android:paddingRight="10dp"
+        android:text="This is an example charging pole description. Lorem ipsum lallalaa this text is only temporary, just testing. böar möfdbn prdgn aorieng orieno iraengaorngae nrgaöjern ganrgaor ngoae rngoanrgoan jfgajfngoanjgoangoa ngaodfngoansgoarngoanr goairngoang råoanrågunarå"/>
 
-        <TextView android:id="@+id/description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLines="6"
-            android:layout_weight="1"
-            android:paddingRight="10dp"
-            android:text="This is an example charging pole description. Lorem ipsum lallalaa this text is only temporary, just testing."/>
 
-        <RelativeLayout
+    <TextView android:id="@+id/typeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/description"
+        android:layout_marginTop="15dp"
+        android:text="Tyyppi:"/>
+
+    <TextView android:id="@+id/powerText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/typeText"
+        android:layout_marginTop="10dp"
+        android:text="Teho:"/>
+
+    <!--<RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/description"
+        android:layout_marginLeft="20dp">
+
+
+
+        <ImageView android:id="@+id/pluginIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp">
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/plugin_icon"/>
 
-            <ImageView android:id="@+id/pluginIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/plugin_icon"/>
+        <ImageView android:id="@+id/powerIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@id/pluginIcon"
+            android:src="@drawable/power"/>
 
-            <ImageView android:id="@+id/powerIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_below="@id/pluginIcon"
-                android:src="@drawable/power"/>
-
-        </RelativeLayout>
-
-    </LinearLayout>
+    </RelativeLayout>-->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="50dp"
-        android:layout_below="@id/descBox">
+        android:paddingTop="20dp"
+        android:layout_below="@+id/powerText">
 
         <Button android:id="@+id/bookButton"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Varaa"
             android:paddingLeft="10dp"
@@ -73,7 +101,7 @@
             android:layout_weight="1"/>
 
         <Button android:id="@+id/FavoriteButton"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Tykkää"
             android:paddingLeft="5dp"

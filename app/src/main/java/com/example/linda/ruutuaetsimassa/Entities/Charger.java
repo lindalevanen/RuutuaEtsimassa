@@ -12,15 +12,17 @@ public class Charger {
     private String description;
     private String address;
     private boolean isFree;
+    private double pricePerH;
     private double power;
     private PoleType poleType;
     private LatLng coords;
 
-    public Charger(String name, String description, String address, boolean free, double pow, PoleType type, LatLng loc) {
+    public Charger(String name, String description, String address, boolean free, double price, double pow, PoleType type, LatLng loc) {
         this.name = name;
         this.address = address;
         this.description = description;
         this.power = pow;
+        this.pricePerH = price;
         this.poleType = type;
         this.coords = loc;
         this.isFree = free;
@@ -48,6 +50,10 @@ public class Charger {
 
     public String getName() {
         return name;
+    }
+
+    public double getPricePerH() {
+        return pricePerH;
     }
 
     public boolean isFree() {
