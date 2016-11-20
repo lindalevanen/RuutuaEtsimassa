@@ -3,6 +3,7 @@ package com.example.linda.ruutuaetsimassa;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.opengl.Visibility;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -35,8 +36,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static com.example.linda.ruutuaetsimassa.HelperMethods.changeStatusBarColor;
+import static com.example.linda.ruutuaetsimassa.R.id.map;
 
 public class MapActivity extends FragmentActivity
         implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener,
@@ -44,7 +47,8 @@ public class MapActivity extends FragmentActivity
 
     private GoogleMap mMap;
     SlidingUpPanelLayout slideLO;
-    private HashMap<Marker, Charger> markerChargerMap;
+    private HashMap<Marker, Charger> allMarkerChargers;
+    private HashMap<Marker, Charger> shownMarkerChargers;
     private HashMap<PoleType, Boolean> poleTypeFilters;
     private HashMap<String, Boolean> powerFilters;
 
@@ -67,14 +71,15 @@ public class MapActivity extends FragmentActivity
         setContentView(R.layout.activity_map);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(map);
         mapFragment.getMapAsync(this);
 
         MapsInitializer.initialize(getApplicationContext());
 
         changeStatusBarColor(this, "#22735C");
 
-        markerChargerMap = new HashMap<Marker, Charger>();
+        allMarkerChargers = new HashMap<Marker, Charger>();
+        shownMarkerChargers = new HashMap<Marker, Charger>();
 
         sliderInit();
         initDrawer();
@@ -224,7 +229,8 @@ public class MapActivity extends FragmentActivity
                 .position(charger.getCoords())
                 .icon(BitmapDescriptorFactory.fromBitmap(resized)));
 
-        markerChargerMap.put(newMarker, charger);
+        allMarkerChargers.put(newMarker, charger);
+        shownMarkerChargers.put(newMarker, charger);
     }
 
     public void showMarkerInfo(Marker marker) {
@@ -243,7 +249,7 @@ public class MapActivity extends FragmentActivity
         boolean thisIsOwnCharger = hasOwnCharger() && ownCharger.equals(marker);
 
         InfoFragment infoFrag =
-                InfoFragment.newInstance(markerChargerMap.get(marker), marker, thisIsOwnCharger);
+                InfoFragment.newInstance(allMarkerChargers.get(marker), marker, thisIsOwnCharger);
         trans.add(R.id.info_frag, infoFrag, "chargerInfo");
         trans.addToBackStack(null);
         trans.commit();
@@ -275,7 +281,22 @@ public class MapActivity extends FragmentActivity
         poleTypeFilters = poleTypeF;
         powerFilters = powerF;
 
-        //TODO: muokkaa karttaa näiden mukaan..........
+        for (Map.Entry<Marker, Charger> entry : allMarkerChargers.entrySet()) {
+            Marker marker = entry.getKey();
+            Charger charger = entry.getValue();
+
+            if(!poleTypeFilters.get(charger.getPoleType()) || !powerFilters.get(String.valueOf(charger.getPower()))) {
+                marker.setVisible(false);
+                shownMarkerChargers.remove(marker);
+            } else {
+                Charger possibleCharger = shownMarkerChargers.get(marker);
+                if (possibleCharger == null) {
+                    marker.setVisible(true);
+                }
+
+
+            }
+        }
 
         FragmentManager manager = getSupportFragmentManager();
         manager.popBackStack();
@@ -287,7 +308,7 @@ public class MapActivity extends FragmentActivity
             marker.setIcon(blueMarker);
             ownCharger = null;
             showReceipt(bookTime);
-            markerChargerMap.get(marker).setAsFree(true);
+            allMarkerChargers.get(marker).setAsFree(true);
             slideLO.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         } else {
             if(hasOwnCharger()) {
@@ -297,7 +318,7 @@ public class MapActivity extends FragmentActivity
                 marker.setIcon(redMarker);
                 ownCharger = marker;
                 Toast.makeText(this, "Varaus onnistui!", Toast.LENGTH_SHORT).show();
-                markerChargerMap.get(marker).setAsFree(false);
+                allMarkerChargers.get(marker).setAsFree(false);
                 slideLO.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
             }
         }
