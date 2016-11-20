@@ -7,18 +7,60 @@
     android:clickable="true"
     tools:context="com.example.linda.ruutuaetsimassa.FilterFragment">
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/actionbar"
-        android:layout_margin="20dp">
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:layout_marginTop="52dp"
+        android:paddingTop="10dp">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Tänne filterit, plugintype ja teho" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="-7dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
 
-    </RelativeLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Tyyppi"
+                android:textStyle="bold"
+                android:textSize="17sp"
+                android:textColor="#000000"/>
+
+            <LinearLayout android:id="@+id/typeSwithces"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Teho"
+                android:textStyle="bold"
+                android:layout_marginTop="15dp"
+                android:textSize="17sp"
+                android:textColor="#000000"/>
+
+            <LinearLayout android:id="@+id/powerSwithces"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="10dp"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
 
     <RelativeLayout android:id="@+id/actionbar"
         android:layout_width="match_parent"
@@ -27,7 +69,7 @@
         android:layout_alignParentTop="true"
         android:paddingBottom="7dp">
 
-        <ImageButton android:id="@+id/close_button"
+        <ImageButton android:id="@+id/closeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -40,14 +82,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_toRightOf="@id/close_button"
+            android:layout_toRightOf="@id/closeButton"
             android:textStyle="bold"
             android:layout_marginStart="5dp"
             android:textColor="#ffffff"
             android:text="Suodatin"
             android:layout_centerVertical="true"/>
 
-        <ImageButton android:id="@+id/send_button"
+        <ImageButton android:id="@+id/finishButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"

@@ -1,0 +1,134 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:paddingLeft="30dp"
+    android:paddingRight="30dp"
+    android:clickable="true"
+    tools:context="com.example.linda.ruutuaetsimassa.CreditCardFragment">
+
+    <TextView android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Syötä maksukortin tiedot:"
+        android:textColor="#ffffff"
+        android:textSize="15sp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="80dp"/>
+
+    <!--TODO: muuta tämän imagen koko 10dp max-->
+
+    <ImageView android:id="@+id/questionIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_help_48"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="82dp"
+        android:maxHeight="10dp"/>
+
+    <EditText android:id="@+id/cardNO"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:layout_centerHorizontal="true"
+        android:hint="Kortin numero"
+        android:textColorHint="#bfbfbf"
+        android:background="#ffffff"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:layout_marginTop="110dp" />
+
+    <LinearLayout android:id="@+id/expirationLO"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="5dp"
+        android:layout_below="@id/cardNO">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Erääntyy"
+            android:layout_marginLeft="2dp"
+            android:textSize="15sp"
+            android:layout_marginTop="3dp"
+            android:textColor="#ffffff"
+            android:layout_weight="1"/>
+
+        <Spinner
+            android:id="@+id/month"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="3dp"
+            android:foreground="#80ffffff"
+            android:layout_weight="1"/>
+
+        <Spinner
+            android:id="@+id/year"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="3dp"
+            android:foreground="#80ffffff"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <EditText android:id="@+id/ccvField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:hint="CCV"
+        android:textColorHint="#bfbfbf"
+        android:background="#ffffff"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:layout_below="@+id/expirationLO"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp" />
+
+    <EditText android:id="@+id/nameField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="Nimi"
+        android:textColorHint="#bfbfbf"
+        android:background="#ffffff"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:layout_below="@+id/ccvField"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp" />
+
+    <RelativeLayout android:id="@+id/regButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nameField"
+        android:layout_centerHorizontal="true"
+        android:background="#ffffff"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:layout_marginTop="25dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/background"
+            android:padding="12dp"
+            android:text="REKISTERÖIDY"/>
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

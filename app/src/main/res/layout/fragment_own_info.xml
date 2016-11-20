@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
     android:padding="30dp"
+    android:background="@color/background"
     android:clickable="true"
-    tools:context="com.example.linda.ruutuaetsimassa.LoginFragment">
+    tools:context="com.example.linda.ruutuaetsimassa.OwnInfoFragment">
 
     <EditText android:id="@+id/emailInput"
         android:layout_width="match_parent"
@@ -35,10 +35,24 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"/>
 
-    <RelativeLayout android:id="@+id/signInButton"
+    <EditText android:id="@+id/passwordInputAgain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/passwordInput"
+        android:inputType="textPassword"
+        android:hint="Salasana uudelleen"
+        android:textColorHint="#bfbfbf"
+        android:background="#ffffff"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:layout_below="@+id/passwordInput"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"/>
+
+    <RelativeLayout android:id="@+id/regButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/passwordInputAgain"
         android:layout_centerHorizontal="true"
         android:background="#ffffff"
         android:foreground="?android:attr/selectableItemBackground"
@@ -49,11 +63,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:textSize="15sp"
+            android:textSize="17sp"
             android:textStyle="bold"
             android:textColor="@color/background"
             android:padding="11dp"
-            android:text="KIRJAUDU SISÄÄN"/>
+            android:text="Seuraava"/>
 
     </RelativeLayout>
 

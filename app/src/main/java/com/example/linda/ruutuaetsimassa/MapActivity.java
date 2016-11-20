@@ -1,7 +1,6 @@
 package com.example.linda.ruutuaetsimassa;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.Fragment;
@@ -18,13 +17,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.linda.ruutuaetsimassa.Entities.Charger;
 import com.example.linda.ruutuaetsimassa.Entities.PoleType;
-import com.google.android.gms.drive.query.Filter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -36,8 +36,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.HashMap;
 
-import static android.R.attr.width;
-import static com.google.android.gms.maps.model.BitmapDescriptorFactory.fromResource;
+import static com.example.linda.ruutuaetsimassa.HelperMethods.changeStatusBarColor;
 
 public class MapActivity extends FragmentActivity
         implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener,
@@ -46,6 +45,8 @@ public class MapActivity extends FragmentActivity
     private GoogleMap mMap;
     SlidingUpPanelLayout slideLO;
     private HashMap<Marker, Charger> markerChargerMap;
+    private HashMap<PoleType, Boolean> poleTypeFilters;
+    private HashMap<String, Boolean> powerFilters;
 
     //Navigation drawer variables
     public DrawerLayout mDrawerLayout;
@@ -57,6 +58,8 @@ public class MapActivity extends FragmentActivity
     private double width = height * 0.6172;
 
     BitmapDescriptor blueMarker, redMarker;
+    private long startTime;
+    private long bookTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +70,16 @@ public class MapActivity extends FragmentActivity
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        MapsInitializer.initialize(getApplicationContext());
+
+        changeStatusBarColor(this, "#22735C");
+
         markerChargerMap = new HashMap<Marker, Charger>();
 
         sliderInit();
         initDrawer();
         initMarkerBitmapDescriptors();
+        initFilters();
     }
 
     public void sliderInit() {
@@ -87,6 +95,25 @@ public class MapActivity extends FragmentActivity
         Bitmap redMarkerBM = BitmapFactory.decodeResource(getResources(), R.drawable.red_map_marker);
         Bitmap rzRedMarkerBM = Bitmap.createScaledBitmap(redMarkerBM, (int) width, height, true);
         redMarker = BitmapDescriptorFactory.fromBitmap(rzRedMarkerBM);
+    }
+
+    /**
+     * In the beginning all filters are on
+     * TODO: change this later to shared preferences if needed
+     */
+
+    public void initFilters() {
+        poleTypeFilters = new HashMap<>();
+        powerFilters = new HashMap<>();
+
+        for (PoleType type : PoleType.values()) {
+            poleTypeFilters.put(type, true);
+        }
+
+        String[] powerArray = getResources().getStringArray(R.array.powers);
+        for (String power : powerArray) {
+            powerFilters.put(power, true);
+        }
     }
 
     /**
@@ -119,8 +146,10 @@ public class MapActivity extends FragmentActivity
         switch (position) {
             case 0:     //Filtering
                 FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
+                System.out.println(poleTypeFilters);
+                System.out.println(powerFilters);
                 FilterFragment filterFrag =
-                        FilterFragment.newInstance();
+                        FilterFragment.newInstance(poleTypeFilters, powerFilters);
                 trans.add(R.id.filter_fragment, filterFrag, "filterFragment");
                 trans.addToBackStack(null);
                 trans.commit();
@@ -242,17 +271,29 @@ public class MapActivity extends FragmentActivity
         manager.popBackStack();
     }
 
+    public void onFinishPressed(HashMap<PoleType, Boolean> poleTypeF, HashMap<String, Boolean> powerF) {
+        poleTypeFilters = poleTypeF;
+        powerFilters = powerF;
+
+        //TODO: muokkaa karttaa näiden mukaan..........
+
+        FragmentManager manager = getSupportFragmentManager();
+        manager.popBackStack();
+    }
+
     public void onBookPressed(Marker marker, boolean unBook) {
         if(unBook) {
+            Long bookTime = System.currentTimeMillis() - startTime;
             marker.setIcon(blueMarker);
             ownCharger = null;
-            showReceipt();
+            showReceipt(bookTime);
             markerChargerMap.get(marker).setAsFree(true);
             slideLO.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         } else {
             if(hasOwnCharger()) {
                 Toast.makeText(this, "Voit varata vain yhden pisteen kerrallaan!", Toast.LENGTH_SHORT).show();
             } else {
+                startTime = System.currentTimeMillis();
                 marker.setIcon(redMarker);
                 ownCharger = marker;
                 Toast.makeText(this, "Varaus onnistui!", Toast.LENGTH_SHORT).show();
@@ -262,9 +303,12 @@ public class MapActivity extends FragmentActivity
         }
     }
 
-    public void showReceipt() {
+    public void showReceipt(Long bookTime) {
         LayoutInflater li = LayoutInflater.from(this);
-        final View dialogLO = li.inflate(R.layout.receipt_prompt, null);
+        final View dialogLO = li.inflate(R.layout.prompt_receipt, null);
+
+        TextView timeView = (TextView) dialogLO.findViewById(R.id.timeSpent);
+        timeView.setText(getTimeAsString(bookTime));
 
         // Creates the dialog
         final AlertDialog d = new AlertDialog.Builder(this)
@@ -299,6 +343,14 @@ public class MapActivity extends FragmentActivity
         d.show();
     }
 
+    public String getTimeAsString(Long timeSpent) {
+        int secs = (int) (timeSpent / 1000) % 60;
+        int mins = (int) (timeSpent / (1000*60)) % 60;
+        int hours = (int) (timeSpent / (1000*60*60));
+
+        return hours + "h " + mins + "min " + secs + "s";
+    }
+
     @Override
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -310,9 +362,9 @@ public class MapActivity extends FragmentActivity
     }
 
     public void setDummyChargers() {
+
         LatLng otaniemi = new LatLng(60.184310, 24.829612);
         LatLng tapUimahalli = new LatLng(60.178551, 24.807798);
-        LatLng tapMetroasema = new LatLng(60.175302, 24.805717);
         LatLng espooArenaParkkis = new LatLng(60.176399, 24.780923);
         LatLng sellonParkkis = new LatLng(60.218000, 24.812916);
         LatLng didricheninTaidemuseo = new LatLng(60.185346, 24.856132);
@@ -323,31 +375,31 @@ public class MapActivity extends FragmentActivity
         Charger otaCharger = new Charger("Otaniemi charger",
                             "A charger in the middle of Otaniemi, free to use. It's located by Otaniemi mall " +
                             "behind Apteekki.", "Otaniementie 18",
-                            true, 3.0, 18.0, PoleType.TESLA, otaniemi);
+                            true, 3.0, 10.0, PoleType.TESLA, otaniemi);
 
         Charger uimahalliCharger = new Charger("Uimahallin parkkis", "Juuri uimahallin sisäänkäynnin vieressä "+
                                                 "oleva sähkötolpallinen parkkipaikka.", "Kirkkopolku 3",
-                                                false, 4.0, 5.0, PoleType.J1772, tapUimahalli);
+                                                false, 4.0, 3.3, PoleType.J1772, tapUimahalli);
 
         Charger espooArenaParkkisCharger = new Charger("Espoon Arena", "Tolppa pääovilta n. 100m länteen, soita numeroon "+
-                                            "+3591234567 onglelmien ilmetessä.", "Koivu-Mankkaantie 5",
-                                            true, 5.5, 8.0, PoleType.NEMA15, espooArenaParkkis);
+                                            "+3591234567 ongelmien ilmetessä.", "Koivu-Mankkaantie 5",
+                                            true, 5.5, 7.4, PoleType.NEMA15, espooArenaParkkis);
 
         Charger sellonParkkisCharger = new Charger("Sellon tolppa", "Lataustolppa P2 kerroksessa J puolella.",
-                                        "Hevosenkenkä 5", false, 4.4, 14.0, PoleType.NEMA15, sellonParkkis);
+                                        "Hevosenkenkä 5", false, 4.4, 6.6, PoleType.NEMA15, sellonParkkis);
 
         Charger didrichCharger = new Charger("Didrichenin museon tolppa", "Tolppa museon edessä, soita numeroon "+
                                     "+35850493757 ongelmien ilmetessä.","Kuusilahdenkuja 6", true,
-                                            3.0, 10.0, PoleType.SAECOMBO, didricheninTaidemuseo);
+                                            3.0, 6.6, PoleType.SAECOMBO, didricheninTaidemuseo);
 
         Charger cafeCharger = new Charger("Café Bella Charger", "Feel free to use our charger, it's located in "+
-                                        "front of our lovely cafe.","Hietaniemenkuja 5", true, 2.5, 8.0, PoleType.NEMA15, cafeBella);
+                                        "front of our lovely cafe.","Hietaniemenkuja 5", true, 2.5, 7.2, PoleType.NEMA15, cafeBella);
 
         Charger kallenCharger = new Charger("Kallen tolppa","Tolppa tien vieressä, soita +35854943843, "+
-                                "jos tulee ongelmia","Olarinkatu 16", true, 2.5, 8.0, PoleType.NEMA50, kallenTolppa);
+                                "jos tulee ongelmia","Olarinkatu 16", true, 2.5, 3.3, PoleType.NEMA50, kallenTolppa);
 
         Charger matinChareegr = new Charger("Matin latauspiste", "Latauspiste osoitteen kohdalta sisäpihalle päin, "+
-                                "löytyy katoksen alta.","Uudenkirkontie 6", true, 3.0, 6.0, PoleType.TESLA, matinTolppa);
+                                "löytyy katoksen alta.","Uudenkirkontie 6", true, 3.0, 20.0, PoleType.TESLA, matinTolppa);
 
         setNewCharger(otaCharger);
         setNewCharger(uimahalliCharger);

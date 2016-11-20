@@ -7,4 +7,28 @@
         <item>Kirjaudu ulos</item>
     </string-array>
 
+    <string-array name="months">
+        <item>01</item>
+        <item>02</item>
+        <item>03</item>
+        <item>04</item>
+        <item>05</item>
+        <item>06</item>
+        <item>07</item>
+        <item>08</item>
+        <item>09</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+    </string-array>
+
+    <string-array name="powers">
+        <item>3.3</item>
+        <item>6.6</item>
+        <item>7.2</item>
+        <item>7.4</item>
+        <item>10.0</item>
+        <item>20.0</item>
+    </string-array>
+
 </resources>
