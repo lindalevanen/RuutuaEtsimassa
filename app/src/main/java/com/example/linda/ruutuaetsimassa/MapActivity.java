@@ -151,8 +151,6 @@ public class MapActivity extends FragmentActivity
         switch (position) {
             case 0:     //Filtering
                 FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
-                System.out.println(poleTypeFilters);
-                System.out.println(powerFilters);
                 FilterFragment filterFrag =
                         FilterFragment.newInstance(poleTypeFilters, powerFilters);
                 trans.add(R.id.filter_fragment, filterFrag, "filterFragment");

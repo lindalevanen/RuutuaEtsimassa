@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+
 import static com.example.linda.ruutuaetsimassa.HelperMethods.changeStatusBarColor;
 
 public class LoginActivity extends AppCompatActivity
@@ -18,6 +20,7 @@ public class LoginActivity extends AppCompatActivity
 
     private boolean appOpenedBefore;
     public SharedPreferences boolPrefs;
+    SlidingUpPanelLayout sliderLO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,16 @@ public class LoginActivity extends AppCompatActivity
             initButtons();
         }
     }
+
+    /*
+
+    public void initSlider() {
+        sliderLO = (SlidingUpPanelLayout) findViewById(R.id.no_connection);
+        sliderLO.setTouchEnabled(false);
+        sliderLO.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+    }
+
+    */
 
     private void initButtons() {
         Button loginB = (Button) findViewById(R.id.logB);

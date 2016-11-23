@@ -6,7 +6,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,12 +35,23 @@ public class OwnInfoFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_own_info, container, false);
 
         RelativeLayout regB = (RelativeLayout) view.findViewById(R.id.regButton);
+        final EditText emailInp = (EditText) view.findViewById(R.id.emailInput);
+        final EditText passwordInp = (EditText) view.findViewById(R.id.passwordInput);
+        final EditText passwordAgainInp = (EditText) view.findViewById(R.id.passwordInputAgain);
 
         regB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: check that information given is correct...
-                onNextPressed();
+                String email = emailInp.getText().toString();
+                String password = passwordInp.getText().toString();
+                String passwordAgain = passwordAgainInp.getText().toString();
+                if(email.isEmpty() || password.isEmpty() || passwordAgain.isEmpty()) {
+                    Toast.makeText(getContext(), "Täytä kaikki kohdat.", Toast.LENGTH_SHORT).show();
+                } else if(!password.equals(passwordAgain)) {
+                    Toast.makeText(getContext(), "Salasanat eivät vastaa.", Toast.LENGTH_SHORT).show();
+                } else {
+                    onNextPressed();
+                }
             }
         });
 

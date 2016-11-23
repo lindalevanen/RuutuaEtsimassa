@@ -6,13 +6,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import com.example.linda.ruutuaetsimassa.Entities.PoleType;
 
@@ -127,7 +123,6 @@ public class FilterFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     Switch s = (Switch) view;
-                    Toast.makeText(getContext(), "s.isChecked is "+s.isChecked(), Toast.LENGTH_SHORT).show();
                     poleTypeFilters.put(type, s.isChecked());
                 }
             });
@@ -152,7 +147,6 @@ public class FilterFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     Switch s = (Switch) view;
-                    Toast.makeText(getContext(), "s.isChecked is "+s.isChecked(), Toast.LENGTH_SHORT).show();
                     powerFilters.put(power, s.isChecked());
                 }
             });

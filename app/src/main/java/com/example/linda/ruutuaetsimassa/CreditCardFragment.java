@@ -10,9 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -60,6 +62,9 @@ public class CreditCardFragment extends Fragment {
 
         ImageView questionB = (ImageView) view.findViewById(R.id.questionIcon);
         RelativeLayout regB = (RelativeLayout) view.findViewById(R.id.regButton);
+        final EditText cardNoInp = (EditText) view.findViewById(R.id.cardNO);
+        final EditText ccvInp = (EditText) view.findViewById(R.id.ccvField);
+        final EditText nameInp = (EditText) view.findViewById(R.id.nameField);
 
         questionB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +76,14 @@ public class CreditCardFragment extends Fragment {
         regB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onRegisterPressed();
+                boolean cardNoEmpty = cardNoInp.getText().toString().isEmpty();
+                boolean ccvEmpty = ccvInp.getText().toString().isEmpty();
+                boolean nameEmpty = nameInp.getText().toString().isEmpty();
+                if(cardNoEmpty ||ccvEmpty || nameEmpty) {
+                    Toast.makeText(getContext(), "Täytä kaikki kohdat.", Toast.LENGTH_SHORT).show();
+                } else {
+                    onRegisterPressed();
+                }
             }
         });
 

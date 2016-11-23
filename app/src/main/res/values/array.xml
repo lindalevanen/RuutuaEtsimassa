@@ -31,4 +31,12 @@
         <item>20.0</item>
     </string-array>
 
+    <string-array name="emails">
+        <item>linda.levanen@aalto.fi</item>
+        <item>juuso.toikka@aalto.fi</item>
+        <item>matias.stahlstrom@aalto.fi</item>
+        <item>jani.j.makela@aalto.fi</item>
+        <item>vaino.yrjanainen@aalto.fi</item>
+    </string-array>
+
 </resources>
