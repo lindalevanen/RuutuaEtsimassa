@@ -36,7 +36,7 @@ public class CreditCardFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void onRegisterPressed();
+        void onNextPressed(String fromFragment);
     }
 
     /**
@@ -82,7 +82,7 @@ public class CreditCardFragment extends Fragment {
                 if(cardNoEmpty ||ccvEmpty || nameEmpty) {
                     Toast.makeText(getContext(), "Täytä kaikki kohdat.", Toast.LENGTH_SHORT).show();
                 } else {
-                    onRegisterPressed();
+                    onNextPressed();
                 }
             }
         });
@@ -141,9 +141,9 @@ public class CreditCardFragment extends Fragment {
         d.show();
     }
 
-    public void onRegisterPressed() {
+    public void onNextPressed() {
         if (mListener != null) {
-            mListener.onRegisterPressed();
+            mListener.onNextPressed("ccFrag");
         }
     }
 

@@ -1,6 +1,7 @@
 package com.example.linda.ruutuaetsimassa;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.Visibility;
@@ -21,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.linda.ruutuaetsimassa.Entities.Car;
 import com.example.linda.ruutuaetsimassa.Entities.Charger;
 import com.example.linda.ruutuaetsimassa.Entities.PoleType;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -35,15 +37,18 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.example.linda.ruutuaetsimassa.HelperMethods.changeStatusBarColor;
 import static com.example.linda.ruutuaetsimassa.R.id.map;
+import static com.example.linda.ruutuaetsimassa.R.id.timeSpent;
 
 public class MapActivity extends FragmentActivity
         implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener,
-        InfoFragment.onInfoItemPressed, FilterFragment.OnFilterActionListener {
+        InfoFragment.onInfoItemPressed, FilterFragment.OnFilterActionListener, CarProfileFragment.OnFragmentInteractionListener{
 
     private GoogleMap mMap;
     SlidingUpPanelLayout slideLO;
@@ -57,6 +62,7 @@ public class MapActivity extends FragmentActivity
     private ListView mDrawerList;
     private ArrayAdapter<String> mAdapter;
     private Marker ownCharger = null;
+    public static Car ownCar = null;
 
     private int height = 100;
     private double width = height * 0.6172;
@@ -85,6 +91,7 @@ public class MapActivity extends FragmentActivity
         initDrawer();
         initMarkerBitmapDescriptors();
         initFilters();
+        initOwncarFilters();
     }
 
     public void sliderInit() {
@@ -102,6 +109,14 @@ public class MapActivity extends FragmentActivity
         redMarker = BitmapDescriptorFactory.fromBitmap(rzRedMarkerBM);
     }
 
+    public void initOwncarFilters() {
+        if(ownCar != null) {
+            for(int i = 0; i < ownCar.getPluginTypes().length; i++) {
+                poleTypeFilters.put(ownCar.getPluginTypes()[i], true);
+            }
+        }
+    }
+
     /**
      * In the beginning all filters are on
      * TODO: change this later to shared preferences if needed
@@ -111,8 +126,14 @@ public class MapActivity extends FragmentActivity
         poleTypeFilters = new HashMap<>();
         powerFilters = new HashMap<>();
 
-        for (PoleType type : PoleType.values()) {
-            poleTypeFilters.put(type, true);
+        if(ownCar != null) {
+            for (PoleType type : PoleType.values()) {
+                poleTypeFilters.put(type, false);
+            }
+        } else {
+            for (PoleType type : PoleType.values()) {
+                poleTypeFilters.put(type, true);
+            }
         }
 
         String[] powerArray = getResources().getStringArray(R.array.powers);
@@ -148,9 +169,9 @@ public class MapActivity extends FragmentActivity
      */
 
     public void selectItem(int position) {
+        FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
         switch (position) {
             case 0:     //Filtering
-                FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
                 FilterFragment filterFrag =
                         FilterFragment.newInstance(poleTypeFilters, powerFilters);
                 trans.add(R.id.filter_fragment, filterFrag, "filterFragment");
@@ -159,14 +180,31 @@ public class MapActivity extends FragmentActivity
 
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 break;
-            case 1:     //Settings
+            case 1:     //Car Profile
+                if(ownCar == null) {
+                    //TODO: make prompt asking if the user wants to add the info about own car
+                } else {
+                    CarProfileFragment carProfileFrag =
+                            CarProfileFragment.newInstance(ownCar);
+                    trans.add(R.id.filter_fragment, carProfileFrag, "carProfileFrag");
+                    trans.addToBackStack(null);
+                    trans.commit();
+
+                    mDrawerLayout.closeDrawer(GravityCompat.START);
+                }
+                break;
+            case 2:     //Settings
                 Toast.makeText(this, "Settings not yet implemented!", Toast.LENGTH_SHORT).show();
                 break;
-            case 2:     //Own charger
+            case 3:     //Own charger
+                //TODO: add own charger, just some fragment that returns the new spot the user has created,...
+                // ...there's a lot more to do though, it might be nice to show own chargers with golden borders or something
                 Toast.makeText(this, "Adding own charger not yet implemented!", Toast.LENGTH_SHORT).show();
                 break;
-            case 3:     //Sign out
-                Toast.makeText(this, "Signing out not yet implemented!", Toast.LENGTH_SHORT).show();
+            case 4:     //Sign out
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+                finish();
                 break;
         }
     }
@@ -202,6 +240,8 @@ public class MapActivity extends FragmentActivity
 
         mMap.setOnMarkerClickListener(this);
         mMap.setOnMapClickListener(this);
+
+        onFinishPressed(poleTypeFilters, powerFilters);
     }
 
     @Override
@@ -270,7 +310,8 @@ public class MapActivity extends FragmentActivity
         FragmentManager manager = getSupportFragmentManager();
         /* These is switch-case in case there are multiple frament that close differently
         switch (fragment) {
-            case "filterFragment":
+            case "filterFrag":
+            case "carProfileFrag":
         }*/
         manager.popBackStack();
     }
@@ -300,12 +341,26 @@ public class MapActivity extends FragmentActivity
         manager.popBackStack();
     }
 
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    public double getPrice(Long bookTime, double pricePerH) {
+        double hours = (bookTime / (1000*60*60));
+        return round(0.2 + (pricePerH * hours), 2);
+    }
+
     public void onBookPressed(Marker marker, boolean unBook) {
         if(unBook) {
             Long bookTime = System.currentTimeMillis() - startTime;
+            double pricePerH = allMarkerChargers.get(marker).getPricePerH();
             marker.setIcon(blueMarker);
             ownCharger = null;
-            showReceipt(bookTime);
+            showReceipt(bookTime, getPrice(bookTime, pricePerH));
             allMarkerChargers.get(marker).setAsFree(true);
             slideLO.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         } else {
@@ -322,12 +377,15 @@ public class MapActivity extends FragmentActivity
         }
     }
 
-    public void showReceipt(Long bookTime) {
+    public void showReceipt(Long bookTime, double price) {
         LayoutInflater li = LayoutInflater.from(this);
         final View dialogLO = li.inflate(R.layout.prompt_receipt, null);
 
-        TextView timeView = (TextView) dialogLO.findViewById(R.id.timeSpent);
+        TextView timeView = (TextView) dialogLO.findViewById(timeSpent);
         timeView.setText(getTimeAsString(bookTime));
+
+        TextView priceView = (TextView) dialogLO.findViewById(R.id.totalPrice);
+        priceView.setText(String.valueOf(price) + "e");
 
         // Creates the dialog
         final AlertDialog d = new AlertDialog.Builder(this)
@@ -394,31 +452,31 @@ public class MapActivity extends FragmentActivity
         Charger otaCharger = new Charger("Otaniemi charger",
                             "A charger in the middle of Otaniemi, free to use. It's located by Otaniemi mall " +
                             "behind Apteekki.", "Otaniementie 18",
-                            true, 3.0, 10.0, PoleType.TESLA, otaniemi);
+                            true, 3.0, 10.0, PoleType.TYPE1, otaniemi);
 
         Charger uimahalliCharger = new Charger("Uimahallin parkkis", "Juuri uimahallin sisäänkäynnin vieressä "+
                                                 "oleva sähkötolpallinen parkkipaikka.", "Kirkkopolku 3",
-                                                false, 4.0, 3.3, PoleType.J1772, tapUimahalli);
+                                                false, 4.0, 3.3, PoleType.TYPE1, tapUimahalli);
 
         Charger espooArenaParkkisCharger = new Charger("Espoon Arena", "Tolppa pääovilta n. 100m länteen, soita numeroon "+
                                             "+3591234567 ongelmien ilmetessä.", "Koivu-Mankkaantie 5",
-                                            true, 5.5, 7.4, PoleType.NEMA15, espooArenaParkkis);
+                                            true, 5.5, 7.4, PoleType.TYPE1, espooArenaParkkis);
 
         Charger sellonParkkisCharger = new Charger("Sellon tolppa", "Lataustolppa P2 kerroksessa J puolella.",
-                                        "Hevosenkenkä 5", false, 4.4, 6.6, PoleType.NEMA15, sellonParkkis);
+                                        "Hevosenkenkä 5", false, 4.4, 20.0, PoleType.CHADEMO, sellonParkkis);
 
         Charger didrichCharger = new Charger("Didrichenin museon tolppa", "Tolppa museon edessä, soita numeroon "+
                                     "+35850493757 ongelmien ilmetessä.","Kuusilahdenkuja 6", true,
-                                            3.0, 6.6, PoleType.SAECOMBO, didricheninTaidemuseo);
+                                            3.0, 6.6, PoleType.TYPE2, didricheninTaidemuseo);
 
         Charger cafeCharger = new Charger("Café Bella Charger", "Feel free to use our charger, it's located in "+
-                                        "front of our lovely cafe.","Hietaniemenkuja 5", true, 2.5, 7.2, PoleType.NEMA15, cafeBella);
+                                        "front of our lovely cafe.","Hietaniemenkuja 5", true, 2.5, 7.2, PoleType.CCSCOMBO, cafeBella);
 
         Charger kallenCharger = new Charger("Kallen tolppa","Tolppa tien vieressä, soita +35854943843, "+
-                                "jos tulee ongelmia","Olarinkatu 16", true, 2.5, 3.3, PoleType.NEMA50, kallenTolppa);
+                                "jos tulee ongelmia","Olarinkatu 16", true, 2.5, 3.3, PoleType.TYPE1, kallenTolppa);
 
         Charger matinChareegr = new Charger("Matin latauspiste", "Latauspiste osoitteen kohdalta sisäpihalle päin, "+
-                                "löytyy katoksen alta.","Uudenkirkontie 6", true, 3.0, 20.0, PoleType.TESLA, matinTolppa);
+                                "löytyy katoksen alta.","Uudenkirkontie 6", true, 3.0, 20.0, PoleType.TYPE1, matinTolppa);
 
         setNewCharger(otaCharger);
         setNewCharger(uimahalliCharger);

@@ -90,14 +90,18 @@ public class FilterFragment extends Fragment {
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onClosePressed("filterFragment");
+                if (mListener != null) {
+                    mListener.onClosePressed("filterFrag");
+                }
             }
         });
 
         finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onFinishPressed(poleTypeFilters, powerFilters);
+                if (mListener != null) {
+                    mListener.onFinishPressed(poleTypeFilters, powerFilters);
+                }
             }
         });
     }
@@ -136,7 +140,7 @@ public class FilterFragment extends Fragment {
             LinearLayout.LayoutParams loParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
-            loParams.setMargins(0, dpToPx(getContext(), 5),0,0);
+            loParams.setMargins(0, dpToPx(getContext(), 5) ,0,0);
             newSwitch.setText(power + "kW");
             newSwitch.setTag(power);
 
@@ -152,20 +156,6 @@ public class FilterFragment extends Fragment {
             });
 
             powerSwitchLO.addView(newSwitch, loParams);
-        }
-    }
-
-
-
-    public void onClosePressed(String fragment) {
-        if (mListener != null) {
-            mListener.onClosePressed(fragment);
-        }
-    }
-
-    public void onFinishPressed(HashMap<PoleType, Boolean> poleTypeF, HashMap<String, Boolean> powerF) {
-        if (mListener != null) {
-            mListener.onFinishPressed(poleTypeF, powerF);
         }
     }
 

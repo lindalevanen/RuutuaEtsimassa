@@ -1,0 +1,193 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:clickable="true"
+    tools:context="com.example.linda.ruutuaetsimassa.AddCarFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingBottom="20dp">
+
+            <TextView android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lisää auto"
+                android:textColor="#ffffff"
+                android:textSize="15sp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="80dp"/>
+
+            <EditText android:id="@+id/carId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:layout_centerHorizontal="true"
+                android:hint="Tunniste"
+                android:textColorHint="#bfbfbf"
+                android:background="#ffffff"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:layout_marginTop="110dp" />
+
+            <TextView android:id="@+id/registerNo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rekisterinumero"
+                android:textColor="#ffffff"
+                android:textSize="15sp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="15dp"
+                android:layout_below="@id/carId"/>
+
+            <LinearLayout android:id="@+id/registerNoSpinners"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="5dp"
+                android:layout_below="@id/registerNo">
+
+                <LinearLayout android:id="@+id/chars"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1">
+
+                    <EditText android:id="@+id/charField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapCharacters"
+                        android:textColorHint="#bfbfbf"
+                        android:gravity="center"
+                        android:background="#ffffff"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"/>
+
+                </LinearLayout>
+
+                <!-- the dot between characters and numbers -->
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#ffffff"
+                    android:layout_marginTop="17dp"
+                    android:padding="4dp">
+                </FrameLayout>
+
+                <LinearLayout android:id="@+id/numbers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1">
+
+                    <EditText android:id="@+id/numField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:textColorHint="#bfbfbf"
+                        android:gravity="center"
+                        android:background="#ffffff"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView android:id="@+id/pluginText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Plugin tyyppi"
+                android:textColor="#ffffff"
+                android:textSize="15sp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="10dp"
+                android:layout_below="@id/registerNoSpinners"/>
+
+
+            <RelativeLayout android:id="@+id/pluginTypes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pluginText">
+
+                <Spinner android:id="@+id/pluginType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/spinner_bg"
+                    android:tag="1"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:padding="10dp">
+                </Spinner>
+
+                <ImageView android:id="@+id/addIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/ic_add"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_below="@id/pluginType"/>
+
+                <!-- HERE TO BE ADDED OTHER PLUGINTYPE SPINNERS -->
+
+            </RelativeLayout>
+
+            <RelativeLayout android:id="@+id/regButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pluginTypes"
+                android:layout_centerHorizontal="true"
+                android:background="#ffffff"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/background"
+                    android:padding="12dp"
+                    android:text="SEURAAVA"/>
+
+            </RelativeLayout>
+
+            <TextView android:id="@+id/skipB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OHITA"
+                android:layout_centerHorizontal="true"
+                android:textColor="#ffffff"
+                android:clickable="true"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/regButton"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:textColor="#ffffff"
+                android:text="(voit tehdä tämän myöhemmin)"
+                android:layout_marginTop="10dp"
+                android:layout_below="@id/skipB"/>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

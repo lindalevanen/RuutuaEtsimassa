@@ -18,8 +18,6 @@
         android:layout_marginLeft="2dp"
         android:layout_marginTop="80dp"/>
 
-    <!--TODO: muuta tämän imagen koko 10dp max-->
-
     <ImageView android:id="@+id/questionIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -65,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp"
             android:layout_marginTop="3dp"
-            android:foreground="#80ffffff"
+            android:background="@drawable/spinner_bg"
             android:layout_weight="1"/>
 
         <Spinner
@@ -74,7 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="3dp"
-            android:foreground="#80ffffff"
+            android:background="@drawable/spinner_bg"
             android:layout_weight="1"/>
 
     </LinearLayout>

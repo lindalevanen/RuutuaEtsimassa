@@ -10,13 +10,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.linda.ruutuaetsimassa.Entities.Car;
+import com.example.linda.ruutuaetsimassa.Entities.PoleType;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import static com.example.linda.ruutuaetsimassa.HelperMethods.changeStatusBarColor;
 
 public class LoginActivity extends AppCompatActivity
         implements LoginFragment.OnFragmentInteractionListener, OwnInfoFragment.OnFragmentInteractionListener,
-        CreditCardFragment.OnFragmentInteractionListener {
+        CreditCardFragment.OnFragmentInteractionListener, AddCarFragment.OnFragmentInteractionListener {
 
     private boolean appOpenedBefore;
     public SharedPreferences boolPrefs;
@@ -53,19 +55,10 @@ public class LoginActivity extends AppCompatActivity
         }
     }
 
-    /*
-
-    public void initSlider() {
-        sliderLO = (SlidingUpPanelLayout) findViewById(R.id.no_connection);
-        sliderLO.setTouchEnabled(false);
-        sliderLO.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-    }
-
-    */
-
     private void initButtons() {
         Button loginB = (Button) findViewById(R.id.logB);
         Button registerB = (Button) findViewById(R.id.regB);
+        //Button ohitaB = (Button) findViewById(R.id.ohita);
 
         loginB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,23 +87,52 @@ public class LoginActivity extends AppCompatActivity
                 trans.commit();
             }
         });
+
+        /*ohitaB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PoleType[] types = {PoleType.TYPE1, PoleType.CHADEMO};
+                MapActivity.ownCar = new Car("Nissan Leaf", "ABC - 123", types);
+                startMapActivity();
+            }
+        });*/
     }
 
     public void onLoginPressed() {
+        PoleType[] types = {PoleType.TYPE1, PoleType.CHADEMO};
+        MapActivity.ownCar = new Car("Nissan Leaf", "ABC - 123", types);
         startMapActivity();
     }
 
-    public void onRegisterPressed() {
-        startMapActivity();
+    public void setUserCar(Car userCar) {
+        MapActivity.ownCar = userCar;
     }
 
-    public void onNextPressed() {
+    /**
+     * Defines what happenes when user moves to the next part of registeration.
+     * @param fromFragment the fragment the user comes from
+     */
+
+    public void onNextPressed(String fromFragment) {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction trans = manager.beginTransaction();
 
-        CreditCardFragment ccFrag =
-                CreditCardFragment.newInstance();
-        trans.add(R.id.ccFrag, ccFrag, "ccFrag");
+        switch (fromFragment) {
+            case "ownInfoFrag":
+                AddCarFragment addCarFrag =
+                        AddCarFragment.newInstance();
+                trans.add(R.id.addCarFrag, addCarFrag, "addCarFrag");
+                break;
+            case "addCarFrag":
+                CreditCardFragment ccFrag =
+                        CreditCardFragment.newInstance();
+                trans.add(R.id.ccFrag, ccFrag, "ccFrag");
+                break;
+            case "ccFrag":
+                startMapActivity();
+                break;
+        }
+
         trans.addToBackStack(null);
         trans.commit();
     }

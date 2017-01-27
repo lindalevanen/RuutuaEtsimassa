@@ -3,30 +3,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context="com.example.linda.ruutuaetsimassa.LoginActivity">
 
     <RelativeLayout android:id="@+id/main_content"
         android:layout_width="match_parent"
-        android:padding="30dp"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="30dp">
 
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="#000000"
             android:layout_centerHorizontal="true"
-            android:layout_above="@+id/logB"
-            android:layout_marginBottom="80dp"
-            android:text="SähköBNB"/>
+            android:layout_marginTop="50dp"
+            android:src="@drawable/ic_parkit_logo" />
 
         <Button android:id="@+id/logB"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textColor="#ffffff"
-            android:background="@color/background"
+            android:textColor="@color/background"
+            android:background="#ffffff"
             android:foreground="?android:attr/selectableItemBackground"
             android:text="KIRJAUDU SISÄÄN" />
 
@@ -34,12 +31,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="REKISTERÖIDY"
-            android:textColor="#ffffff"
+            android:textColor="@color/background"
+            android:background="#ffffff"
             android:layout_marginTop="10dp"
             android:layout_centerHorizontal="true"
-            android:background="@color/background"
             android:foreground="?android:attr/selectableItemBackground"
             android:layout_below="@+id/logB"/>
+
+        <!--<Button android:id="@+id/ohita"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/regB"
+            android:layout_centerHorizontal="true"
+            android:text="ohita"/>-->
 
     </RelativeLayout>
 
@@ -55,11 +60,16 @@
         android:layout_gravity="right|top">
     </FrameLayout>
 
-    <FrameLayout android:id="@+id/ccFrag"
+    <FrameLayout android:id="@+id/addCarFrag"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="right|top">
     </FrameLayout>
 
+    <FrameLayout android:id="@+id/ccFrag"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="right|top">
+    </FrameLayout>
 
 </RelativeLayout>

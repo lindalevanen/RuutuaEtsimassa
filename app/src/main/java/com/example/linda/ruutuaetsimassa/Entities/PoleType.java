@@ -7,13 +7,10 @@ import static android.R.attr.value;
  */
 
 public enum PoleType {
-    NEMA15("NEMA 15"),
-    NEMA20("NEMA 20"),
-    NEMA50("NEMA 50"),
-    TESLA("Tesla"),
-    J1772("J1772"),
-    SAECOMBO("SAE Combo"),
-    CHADEMO("CHAdeMO");
+    TYPE1("Tyyppi 1"),
+    TYPE2("Tyyppi 2"),
+    CHADEMO("CHAdeMo"),
+    CCSCOMBO("CCS Combo");
 
     private String name;
 

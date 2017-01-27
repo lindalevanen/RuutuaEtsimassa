@@ -25,7 +25,7 @@ public class OwnInfoFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        public void onNextPressed();
+        public void onNextPressed(String fromFragment);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class OwnInfoFragment extends Fragment {
                 if(email.isEmpty() || password.isEmpty() || passwordAgain.isEmpty()) {
                     Toast.makeText(getContext(), "Täytä kaikki kohdat.", Toast.LENGTH_SHORT).show();
                 } else if(!password.equals(passwordAgain)) {
-                    Toast.makeText(getContext(), "Salasanat eivät vastaa.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Salasanat eivät täsmää.", Toast.LENGTH_SHORT).show();
                 } else {
                     onNextPressed();
                 }
@@ -68,7 +68,7 @@ public class OwnInfoFragment extends Fragment {
 
     public void onNextPressed() {
         if (mListener != null) {
-            mListener.onNextPressed();
+            mListener.onNextPressed("ownInfoFrag");
         }
     }
 

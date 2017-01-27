@@ -19,7 +19,7 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:paddingLeft="10dp"
-        android:layout_marginTop="110dp"/>
+        android:layout_marginTop="140dp"/>
 
     <EditText android:id="@+id/passwordInput"
         android:layout_width="match_parent"

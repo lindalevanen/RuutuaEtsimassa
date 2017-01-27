@@ -1,0 +1,78 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:clickable="true"
+    tools:context="com.example.linda.ruutuaetsimassa.CarProfileFragment">
+
+    <ImageView android:id="@+id/closeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/close_icon"
+        android:clickable="true"
+        android:padding="15dp"/>
+
+    <ImageView android:id="@+id/carImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_car_icon"
+        android:layout_marginTop="60dp"/>
+
+    <TextView android:id="@+id/id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Tunniste"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:textColor="#ffffff"
+        android:layout_below="@+id/carImg"/>
+
+    <TextView android:id="@+id/registerNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Rekkari"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/id"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/registerNo"
+        android:layout_marginTop="30dp"
+        android:layout_centerHorizontal="true">
+
+        <LinearLayout android:id="@+id/pTypes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerHorizontal="true">
+
+            <!-- TYPES ARE ADDED HERE -->
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+
+    <!--
+    <TextView android:id="@+id/type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="Tyyppi"
+        android:textColor="#ffffff"
+        android:background="@drawable/color_border"
+        android:textSize="20sp"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/registerNo"/>
+    -->
+
+
+</RelativeLayout>
